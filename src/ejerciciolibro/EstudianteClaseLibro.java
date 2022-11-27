@@ -4,10 +4,7 @@ import java.util.Random;
 
 public class EstudianteClaseLibro implements Runnable {
 
-	// Los libros son el recurso compartido
-	public static Object o = new Object();
-	public static boolean[] libros = new boolean[9];
-	public static Libro l;
+	public Libro l;
 	
 	public EstudianteClaseLibro(Libro l) {
 		this.l = l;
@@ -22,14 +19,14 @@ public class EstudianteClaseLibro implements Runnable {
 				while (libro2 == libro1) {
 					libro2 = new Random().nextInt(9);
 				}
-				l.reservaLibros(libros, libro1, libro2);
+				l.reservaLibros(libro1, libro2);
 				
 				System.out.println(
 						Thread.currentThread().getName() + " tiene reservados los libros " + libro1 + " y " + libro2);
 				Thread.sleep((long) (Math.random() * 3000));
 				System.out.println(Thread.currentThread().getName() + " ha terminado de leer.");
 
-				l.liberaLibros(libros, libro1, libro2);
+				l.liberaLibros(libro1, libro2);
 
 				Thread.sleep(1000);
 			}
@@ -47,6 +44,7 @@ public class EstudianteClaseLibro implements Runnable {
 		for (int i = 1; i <= 4; i++) {
 			Thread hilo = new Thread(e);
 			hilo.setName("Estudiante " + i);
+			hilo.setPriority(i*2);
 			hilo.start();
 		}
 	}

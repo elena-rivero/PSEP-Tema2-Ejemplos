@@ -1,23 +1,24 @@
 package ejerciciolibro;
 
 public class Libro {
-	private int id;
-	private boolean enUso = false;
-	
-	public Libro(int id, boolean enUso) {
-		super();
-		this.id = id;
-		this.enUso = enUso;
+
+	public synchronized void reservaLibros(boolean[] libros, int libro1, int libro2) {
+		while (libros[libro1] == true || libros[libro2] == true) {
+			try {
+				this.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		// Reservo los libros
+		libros[libro1] = true;
+		libros[libro2] = true;
 	}
 
-	public boolean isEnUso() {
-		return enUso;
+	public synchronized void liberaLibros(boolean[] libros, int libro1, int libro2) {
+		libros[libro1] = false;
+		libros[libro2] = false;
+		this.notifyAll();
 	}
 
-	public void setEnUso(boolean enUso) {
-		this.enUso = enUso;
-	}
-	
-	
-	
 }
